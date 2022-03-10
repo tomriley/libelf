@@ -295,6 +295,8 @@ readelf32shdr(FILE *f, Fhdr *fp)
 	fp->name = sh.name;
 	fp->offset = sh.offset;
 	fp->size = sh.size;
+	fp->addr = sh.addr;
+	fp->flags = sh.flags;
 
 	if (verbose)
 		printelf32shdr(&sh, fp);
@@ -393,6 +395,8 @@ readelf64shdr(FILE *f, Fhdr *fp)
 	fp->name = sh.name;
 	fp->offset = sh.offset;
 	fp->size = sh.size;
+	fp->addr = sh.addr;
+	fp->flags = sh.flags;
 
 	if (verbose)
 		printelf64shdr(&sh, fp);

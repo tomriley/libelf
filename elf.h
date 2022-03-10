@@ -41,6 +41,8 @@ struct Fhdr {
 	uint32_t	name;
 	uint64_t	offset;
 	uint64_t	size;
+	uint64_t	addr;
+	uint64_t	flags;
 
 	/* String Table */
 	uint32_t	strndxsize;	/* String Table size */
