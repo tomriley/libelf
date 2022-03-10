@@ -52,6 +52,8 @@ struct Fhdr {
 	uint32_t	name;
 	uint64_t	offset;
 	uint64_t	size;
+	uint64_t	addr;
+	uint64_t	flags;
 
 	/* String Table */
 	uint32_t	strndxsize;	/* String Table Size */
@@ -100,4 +102,26 @@ if (buf == NULL)
 // ...
 
 freeelf(&fhdr);
+```
+
+
+```
+Fhdr fhdr;
+FILE *f;
+uint8_t *buf;
+uint64_t len;
+char* sname;
+
+f = fopen("/bin/ls", "rb");
+if (f == NULL)
+	return -1;
+
+readelf(f, &fhdr);
+for (int i = 0; i < fhdr.shnum; i++) {
+  	uf = readelfsectioni(f, i, &sname, &len, &fhdr);
+	if (buf != NULL)
+    	printf("loaded section %s (%llu bytes)\n", sname, size);
+}
+// ...
+
 ```
