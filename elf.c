@@ -692,6 +692,35 @@ readelfsect(FILE *f, char *name, Fhdr *fp)
 }
 
 /*
+ * Read ELF Section Headers by index
+ */
+uint8_t*
+readelfsecti(FILE *f, int index, char** nameOut, Fhdr *fp)
+{
+	unsigned int i;
+	char *n;
+
+	if (fseek(f, fp->shoff, SEEK_SET) < 0)
+		return NULL;
+
+	for (i = 0; i < fp->shnum; i++) {
+		if (fp->readelfshdr(f, fp) < 0)
+			return NULL;
+		n = getstr(fp, fp->name);
+		if (n == NULL)
+			return NULL;
+		*nameOut = n;
+		if ((int) i == index) {
+			return newsection(f, fp->offset, fp->size);
+		}
+	}
+
+	fprintf(stderr, "section %d not found\n", index);
+
+	return NULL;
+}
+
+/*
  * Read ELF File
  */
 int
@@ -745,6 +774,33 @@ readelfsection(FILE *f, char *name, uint64_t *size, Fhdr *fp)
 	return sect;
 }
 
+/*
+ * Read ELF Section by index
+ */
+uint8_t*
+readelfsectioni(FILE *f, int index, char **name, uint64_t *size, Fhdr *fp)
+{
+	uint8_t *sect;
+
+	memset(fp, 0, sizeof(*fp));
+
+	if (readident(f, fp) < 0)
+		return NULL;
+
+	if (fp->readelfehdr(f, fp) < 0)
+		return NULL;
+
+	if (readelfstrndx(f, fp) < 0)
+		return NULL;
+
+	sect = readelfsecti(f, index, name, fp);
+	if (sect == NULL)
+		return NULL;
+
+	*size = fp->size;
+
+	return sect;
+}
 
 void
 freeelf(Fhdr *fp)

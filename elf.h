@@ -50,6 +50,7 @@ struct Fhdr {
 /* Read */
 int readelf(FILE*, Fhdr*);
 uint8_t* readelfsection(FILE*, char*, uint64_t*, Fhdr*);
+uint8_t* readelfsectioni(FILE*, int, char** name, uint64_t* size, Fhdr*);
 void freeelf(Fhdr*);
 
 /* Print */
